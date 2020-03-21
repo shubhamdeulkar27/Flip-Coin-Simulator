@@ -6,6 +6,8 @@ COUNT=10
 
 headCount=0
 tailCount=0
+
+#FUNCTION FOR FLIPPING COIN
 function flipCoin(){
 	result=$(( RANDOM%2 ))
 	echo $result
