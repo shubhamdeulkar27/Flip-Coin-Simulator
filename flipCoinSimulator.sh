@@ -80,11 +80,76 @@ do
 	(( counter++ ))
 done
 
-printf " -----------------\n"
+#CALCULATING DOUBLET PERCENTAGE
 doublet[ $(( counter++ ))]=$( percentage $headHeadCount )
 doublet[ $(( counter++ ))]=$( percentage $headTailCount )
 doublet[ $(( counter++ ))]=$( percentage $tailHeadCount )
 doublet[ $(( counter++ ))]=$( percentage $tailTailCount )
-
 echo ${doublet[@]}
+
+#GENERATING TRIPLET AND STRING IN DICTIONARY
+
+IS_HEAD_HEAD_HEAD="000"
+IS_HEAD_HEAD_TAIL="001"
+IS_HEAD_TAIL_HEAD="010"
+IS_TAIL_HEAD_HEAD="100"
+IS_HEAD_TAIL_TAIL="011"
+IS_TAIL_HEAD_TAIL="101"
+IS_TAIL_TAIL_HEAD="110"
+IS_TAIL_TAIL_TAIL="111"
+
+headHeadHeadCount=0
+headHeadTailCount=0
+headTailHeadCount=0
+tailHeadHeadCount=0
+headTailTailCount=0
+tailHeadTailCount=0
+tailTailHeadCount=0
+tailTailTailCount=0
+
+declare -A triplet
+counter=0
+
+for (( i=0 ; i<COUNT ; i++ ))
+do
+	triplet[$counter]=$( flipCoin )$( flipCoin )$( flipCoin )
+	if (( triplet[$counter]==$IS_HEAD_HEAD_HEAD ))
+	then
+		(( headHeadHeadCount++ ))
+	elif (( triplet[$counter]==$IS_HEAD_HEAD_TAIL ))
+	then
+		(( headHeadtailCount++ ))
+	elif (( triplet[$counter]==$IS_HEAD_TAIL_HEAD ))
+	then
+		(( headTailHeadCount++ ))
+	elif (( triplet[$counter]==$IS_TAIL_HEAD_HEAD ))
+	then
+		(( tailHeadHeadCount++ ))
+	elif (( triplet[$counter]==$IS_HEAD_TAIL_TAIL ))
+	then
+		(( headTailTailCount++ ))
+	elif (( triplet[$counter]==$IS_TAIL_HEAD_TAIL ))
+	then
+		(( tailHeadTailCount++ ))
+	elif (( triplet[$counter]==$IS_TAIL_TAIL_HEAD ))
+	then
+		(( tailTailHeadCount++ ))
+	elif (( triplet[$counter]==$IS_TAIL_TAIL_TAIL ))
+	then
+		(( tailTailTailCount++ ))
+	fi
+	(( counter++ ))
+done
+
+#CALCULATING PERCENTAGE
+triplet[ $(( counter++ )) ]=$( percentage $headHeadHeadCount )
+triplet[ $(( counter++ )) ]=$( percentage $headHeadTailCount )
+triplet[ $(( counter++ )) ]=$( percentage $headTailHeadCount )
+triplet[ $(( counter++ )) ]=$( percentage $tailHeadHeadCount )
+triplet[ $(( counter++ )) ]=$( percentage $headTailTailCount )
+triplet[ $(( counter++ )) ]=$( percentage $tailHeadTailCount )
+triplet[ $(( counter++ )) ]=$( percentage $tailTailHeadCount )
+triplet[ $(( counter++ )) ]=$( percentage $tailTailTailCount )
+echo ${triplet[@]}
+
 
