@@ -1,7 +1,6 @@
 #!/bin/bash -x
 
 COUNT=10
-
 #FUNCTION FOR FLIPPING COIN
 function flipCoin(){
 	result=$(( RANDOM%2 ))
