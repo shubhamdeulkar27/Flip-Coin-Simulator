@@ -10,85 +10,71 @@ function flipCoin(){
 
 #FUNCTION FOR CALCULATING PERCENTAGE
 function percentage(){
-   count=`echo "$1*0.1"|bc`
-   percent=`echo "$count*100"|bc`
+   percent=$(( $1*10 ))
    echo $percent
 }
 
 #GENERATING SINGLET AND STORING IN DICTIONARY
-
 IS_HEAD=0
 IS_TAIL=1
 
-headCount=0
-tailCount=0
+declare -A results
+count=0
+results[HEAD]=$count
+results[TAIL]=$count
 
-
-declare -A singlet
-counter=0
 for ((  i=0 ; i<COUNT ; i++ ))
 do
-	singlet[$counter]=$( flipCoin )
-	if (( singlet[$counter]==IS_HEAD ))
+	flip=$( flipCoin )
+	if (( flip==$IS_HEAD ))
 	then
-		(( headCount++ ))
-	elif (( singlet[$counter]==IS_TAIL ))
+		(( results[HEAD]++  ))
+	elif (( flip==$IS_TAIL ))
 	then
-		(( tailCount++ ))
+		(( results[TAIL]++ ))
 	fi
-	(( counter++ ))
 done
 
 #SINGLET PERCENTTAGE
-singlet[ $(( counter++ )) ]=$( percentage $headCount )
-echo $singletHeadPercentage
-singlet[ $(( counter++ )) ]=$( percentage $tailCount )
-echo $singletTailPercentage
-
-echo ${singlet[@]}
+results[HEAD_Percent]=$( percentage ${results[HEAD]} )
+results[TAIL_Percent]=$( percentage ${results[TAIL]} )
 
 #GENERATING DOUBLET AND STORING IN DICITIONARY
-
 IS_HEAD_HEAD="00"
 IS_HEAD_TAIL="01"
 IS_TAIL_HEAD="10"
 IS_TAIL_TAIL="11"
 
-headHeadCount=0
-headTailCount=0
-tailHeadCount=0
-tailTailCount=0
-
-declare -A doublet
-counter=0
+count=0
+results[HEAD_HEAD]=$count
+results[HEAD_TAIL]=$count
+results[TAIL_HEAD]=$count
+results[TAIL_TAIL]=$count
 for (( i=0 ; i<COUNT ; i++ ))
 do
-		doublet[$counter]=$( flipCoin )$( flipCoin )
-	if (( doublet[$counter]==$IS_HEAD_HEAD ))
+		flip=$( flipCoin )$( flipCoin )
+	if (( flip==$IS_HEAD_HEAD ))
 	then
-		(( headHeadCount++ ))
-	elif (( doublet[$counter]==$IS_HEAD_TAIL ))
+		(( results[HEAD_HEAD]++ ))
+	elif (( flip==$IS_HEAD_TAIL ))
 	then
-		(( headTailCount++ ))
-	elif (( doublet[$counter]==$IS_TAIL_HEAD ))
+		(( results[HEAD_TAIL]++ ))
+	elif (( flip==$IS_TAIL_HEAD ))
 	then
-		(( tailHeadCount++ ))
-	elif (( doublet[$counter]==$IS_TAIL_TAIL ))
+		(( results[TAIL_HEAD]++ ))
+	elif (( flip==$IS_TAIL_TAIL ))
 	then
-      (( tailTailCount++ ))
+      (( results[TAIL_TAIL]++ ))
 	fi
-	(( counter++ ))
 done
 
-#CALCULATING DOUBLET PERCENTAGE
-doublet[ $(( counter++ ))]=$( percentage $headHeadCount )
-doublet[ $(( counter++ ))]=$( percentage $headTailCount )
-doublet[ $(( counter++ ))]=$( percentage $tailHeadCount )
-doublet[ $(( counter++ ))]=$( percentage $tailTailCount )
-echo ${doublet[@]}
+#DOUBLET PERCENTAGE
+results[HEAD_HEAD_Percent]=$( percentage ${results[HEAD_HEAD]} )
+results[HEAD_TAIL_Percent]=$( percentage ${results[HEAD_TAIL]} )
+results[TAIL_HEAD_Percent]=$( percentage ${results[TAIL_HEAD]} )
+results[TAIL_TAIL_Percent]=$( percentage ${results[TAIL_TAIL]} )
 
 #GENERATING TRIPLET AND STRING IN DICTIONARY
-
 IS_HEAD_HEAD_HEAD="000"
 IS_HEAD_HEAD_TAIL="001"
 IS_HEAD_TAIL_HEAD="010"
@@ -98,58 +84,87 @@ IS_TAIL_HEAD_TAIL="101"
 IS_TAIL_TAIL_HEAD="110"
 IS_TAIL_TAIL_TAIL="111"
 
-headHeadHeadCount=0
-headHeadTailCount=0
-headTailHeadCount=0
-tailHeadHeadCount=0
-headTailTailCount=0
-tailHeadTailCount=0
-tailTailHeadCount=0
-tailTailTailCount=0
+count=0
 
-declare -A triplet
-counter=0
+results[HEAD_HEAD_HEAD]=$count
+results[HEAD_HEAD_TAIL]=$count
+results[HEAD_TAIL_HEAD]=$count
+results[TAIL_HEAD_HEAD]=$count
+results[HEAD_TAIL_TAIL]=$count
+results[TAIL_HEAD_TAIL]=$count
+results[TAIL_TAIL_HEAD]=$count
+results[TAIL_TAIL_TAIL]=$count
 
 for (( i=0 ; i<COUNT ; i++ ))
 do
-	triplet[$counter]=$( flipCoin )$( flipCoin )$( flipCoin )
-	if (( triplet[$counter]==$IS_HEAD_HEAD_HEAD ))
+	flip=$( flipCoin )$( flipCoin )$( flipCoin )
+	if (( flip==$IS_HEAD_HEAD_HEAD ))
 	then
-		(( headHeadHeadCount++ ))
-	elif (( triplet[$counter]==$IS_HEAD_HEAD_TAIL ))
+		(( results[HEAD_HEAD_HEAD]++ ))
+	elif (( flip==$IS_HEAD_HEAD_TAIL ))
 	then
-		(( headHeadtailCount++ ))
-	elif (( triplet[$counter]==$IS_HEAD_TAIL_HEAD ))
+		(( results[HEAD_HEAD_TAIL]++ ))
+	elif (( flip==$IS_HEAD_TAIL_HEAD ))
 	then
-		(( headTailHeadCount++ ))
-	elif (( triplet[$counter]==$IS_TAIL_HEAD_HEAD ))
+		(( results[HEAD_TAIL_HEAD]++ ))
+	elif (( flip==$IS_TAIL_HEAD_HEAD ))
 	then
-		(( tailHeadHeadCount++ ))
-	elif (( triplet[$counter]==$IS_HEAD_TAIL_TAIL ))
+		(( results[TAIL_HEAD_HEAD]++ ))
+	elif (( flip==$IS_HEAD_TAIL_TAIL ))
 	then
-		(( headTailTailCount++ ))
-	elif (( triplet[$counter]==$IS_TAIL_HEAD_TAIL ))
+		(( results[HEAD_TAIL_TAIL]++ ))
+	elif (( flip==$IS_TAIL_HEAD_TAIL ))
 	then
-		(( tailHeadTailCount++ ))
-	elif (( triplet[$counter]==$IS_TAIL_TAIL_HEAD ))
+		(( results[TAIL_HEAD_TAIL]++ ))
+	elif (( flip==$IS_TAIL_TAIL_HEAD ))
 	then
-		(( tailTailHeadCount++ ))
-	elif (( triplet[$counter]==$IS_TAIL_TAIL_TAIL ))
+		(( results[TAIL_TAIL_HEAD]++ ))
+	elif (( flip==$IS_TAIL_TAIL_TAIL ))
 	then
-		(( tailTailTailCount++ ))
+		(( results[TAIL_TAIL_TAIL]++ ))
 	fi
-	(( counter++ ))
 done
 
-#CALCULATING PERCENTAGE
-triplet[ $(( counter++ )) ]=$( percentage $headHeadHeadCount )
-triplet[ $(( counter++ )) ]=$( percentage $headHeadTailCount )
-triplet[ $(( counter++ )) ]=$( percentage $headTailHeadCount )
-triplet[ $(( counter++ )) ]=$( percentage $tailHeadHeadCount )
-triplet[ $(( counter++ )) ]=$( percentage $headTailTailCount )
-triplet[ $(( counter++ )) ]=$( percentage $tailHeadTailCount )
-triplet[ $(( counter++ )) ]=$( percentage $tailTailHeadCount )
-triplet[ $(( counter++ )) ]=$( percentage $tailTailTailCount )
-echo ${triplet[@]}
+#TRIPLET PERCENTAGE
+results[HEAD_HEAD_HEAD_Percent]=$( percentage ${results[HEAD_HEAD_HEAD]} )
+results[HEAD_HEAD_TAIL_Percent]=$( percentage ${results[HEAD_HEAD_TAIL]} )
+results[HEAD_TAIL_HEAD_Percent]=$( percentage ${results[HEAD_TAIL_HEAD]} )
+results[TAIL_HEAD_HEAD_Percent]=$( percentage ${results[TAIL_HEAD_HEAD]} )
+results[HEAD_TAIL_TAIL_Percent]=$( percentage ${results[HEAD_TAIL_TAIL]} )
+results[TAIL_HEAD_TAIL_Percent]=$( percentage ${results[TAIL_HEAD_TAIL]} )
+results[TAIL_TAIL_HEAD_Percent]=$( percentage ${results[TAIL_TAIL_HEAD]} )
+results[TAIL_TAIL_TAIL_Percent]=$( percentage ${results[TAIL_TAIL_TAIL]} )
 
+#STORING DICTIONARY TO ARRAY
+index=0
+for i in ${!results[@]}
+do
+	array[ (( index++ )) ]=${results[$i]}
+done
 
+#SORTING ARRAY
+length=${#array[@]}
+temporary=0
+for (( i=0 ; i<$length ; i++ ))
+do
+	for (( j=0 ; j<$length ; j++ ))
+	do
+		if [ ${array[i]} -lt ${array[j]} ]
+		then
+			temporary=${array[i]}
+			array[i]=${array[j]}
+			array[j]=$temporary
+		fi
+	done
+done
+
+#FINDING WINNING COMBINATION
+highestPercent=${array[$length-1]}
+for i in ${!results[@]}
+do
+	if (( ${results[$i]}==$highestPercent ))
+	then
+		winningCombination=${i::-8}
+	fi
+done
+printf "$winningCombination\n"
